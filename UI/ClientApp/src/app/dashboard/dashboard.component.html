@@ -1,0 +1,145 @@
+
+<app-nav-menu></app-nav-menu>
+<div *ngIf="view == 'View'">
+  <div class="sidebar">
+    <div class="imgcontainer">
+      <!--<span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>-->
+      <img [src]="sanitizer.bypassSecurityTrustUrl(sampleImage)" alt="Avatar" class="" style="width: 30%;">
+      <span class="ms-5">{{loggedinUser}}</span>
+    </div>
+    <a [ngClass]="isdashboard == true ? 'active':''" (click)="dashboard()">Dashboard</a>
+    <a [ngClass]="isdashboard == false ? 'active':''" (click)="userManage()">User Management</a>
+    <a href="#contact">Contact</a>
+    <a href="#about">About</a>
+  </div>
+
+  <div class="content" id="dashboard" *ngIf="isdashboard">
+
+    <h2  class="mb-5 mt-5"> Dashboard</h2>
+    <div style="display:flex">
+      <div class="card col-2 m-4 cardimg">
+        <div class="container ">
+          <h4><b>Users</b></h4>
+          {{dashboardData.users}}
+        </div>
+      </div>
+      <div class="card col-2 m-4 cardimg">
+        <div class="container">
+          <h4><b>Applications</b></h4>
+          {{dashboardData.application}}
+        </div>
+      </div>
+      <div class="card col-2 m-4 cardimg">
+        <div class="container">
+          <h4><b>Modules</b></h4>
+          {{dashboardData.modules}}
+        </div>
+      </div>
+      <div class="card col-2 m-4 cardimg">
+        <div class="container">
+          <h4><b>Packages</b></h4>
+          {{dashboardData.packages}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="isdashboard == false" class="content">
+    <div style="display:flex" class="mb-5 mt-5"  >
+      <h2 style="width: 85%">User Management</h2>
+      <!--<button (click)="Add()" style="height: 19px;">Add New User +</button>-->
+      <a (click)="Add()" style="height: 19px; color: #0366d6;">Add New User +</a>
+    </div>
+
+    <table class="mt-2" style="border: solid; width: 100%">
+      <thead>
+        <tr>
+          <th class="col-3" style="width: 20%">User</th>
+          <th class="col-3" style="width: 20%">Email Address</th>
+          <th class="col-3" style="width: 20%">Customer</th>
+          <th class="col-3" style="width: 20%">Roles</th>
+          <th class="col-3" style="width: 10%">Trial User</th>
+          <th class="col-3" style="width: 40%">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of userData">
+          <th class="col-3" style="width: 20%">{{i.username}} <br> {{i.firstName}} &nbsp;{{i.lastName}}</th>
+          <th class="col-3" style="width: 20%">{{i.emailId}}</th>
+          <th class="col-3" style="width: 20%">{{i.customer}}</th>
+          <th class="col-3" style="width: 20%">{{i.roles}}</th>
+          <th class="col-3" style="width: 10%">{{i.trialUser}}</th>
+          <th class="col-3" style="width: 40%"><button (click)="Edit(i)" style=" margin-right: 10px; margin-left: 10px;">Edit</button> <button (click)="DeleteUser(i)">Delete</button></th>
+        </tr>
+        <!--<tr *ngFor="let d of skillsData; index as i">
+          <td (click)="getDrilldownForSkills(d.label)" style="cursor: pointer;">{{d.label}}</td>
+          <td (click)="getDrilldownForSkills(d.label)" style="cursor: pointer;">{{d.value}}</td>
+        </tr>-->
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+
+
+<div *ngIf="view == 'Add' || view == 'Edit'" class="centerAdd">
+  <div style="display: flex;" class="mb-5">
+    <h1 *ngIf="view == 'Add'" style="width: 70%;">Add New User</h1> <h1 *ngIf="view == 'Edit'" style="width: 40%;">Edit User</h1> <span (click)="userManage()" class="close" title="Close Modal" style="opacity: 1;">&times;</span>
+  </div>
+  <div class="row-1" style="display: flex;">
+    <div id="CustomerType" style="width: 50%;margin: 5px;">
+      <label>Customer</label>
+      <select  [(ngModel)]="user.customer" placeholder="Select Customer">
+        <option>--Select--</option>
+        <option>Gleason</option>
+        <option>Customer</option>
+      </select>
+    </div>
+    <div id="UserName" style="width: 20%;margin: 5px;">
+      <label>User Name</label>
+      <input type="text" [(ngModel)]="user.username">
+    </div>
+  </div>
+
+  <div class="row-2" style="display: flex;">
+    <div style="width: 50%;margin: 5px;">
+      <div id="EmailId" style="margin: 5px;">
+        <label>Email Id</label> <br>
+        <input type="email" [(ngModel)]="user.emailId">
+      </div>
+      <div id="FirstName" style="margin: 5px;">
+        <label>First Name</label><br>
+        <input type="text" [(ngModel)]="user.firstName">
+      </div>
+      <div id="LastName" style="margin: 5px;">
+        <label>Last Name</label><br>
+        <input type="text" [(ngModel)]="user.lastName">
+      </div>
+      <div id="TrailUser" style="margin: 5px;">
+        <label>Trail User</label><br>
+        <input type="checkbox" [(ngModel)]="user.trialUser">
+      </div>
+    </div>
+    <div id="Roles" style="width: 20%;margin: 5px;">
+      <label>Roles</label>
+      <select name="cars" id="cars" multiple [(ngModel)]="user.roles">
+        <option value="Global Gleason Admin">Global Gleason Admin</option>
+        <option value="User">User</option>
+        <option value="Customer Admin">Customer Admin</option>
+        <option value="Global Regional Sales Manager">Global Regional Sales Manager</option>
+        <option value=" Global Engineer/Service Engineer"> Global Engineer/Service Engineer</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="position: relative;left: 50%;">
+    <button *ngIf="view == 'Add'" (click)="AddUser()" style="background-color: lightskyblue; margin-right: 10px ">Add</button><button *ngIf="view == 'Edit'" (click)="EditUser()" style="background-color: lightskyblue;" >Edit</button> <button style="background-color: orangered;">Reset</button>
+  </div>
+</div>
+
+
+
+
